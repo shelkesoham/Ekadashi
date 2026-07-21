@@ -9,16 +9,16 @@ import heroBg from "../../backgroung_image.webp";
 // ─── GLOBAL KEYFRAMES ────────────────────────────────────────────────────────
 const GLOBAL_CSS = `
   @keyframes goldenGlow {
-    0%,100% { text-shadow: 0 0 20px #FFD700, 0 0 40px #FF8C00; }
-    50%      { text-shadow: 0 0 50px #FFD700, 0 0 100px #FF8C00, 0 0 140px #FFD700; }
+    0%,100% { filter: drop-shadow(0 0 8px #FFD700) drop-shadow(0 0 16px #FF8C00); }
+    50%      { filter: drop-shadow(0 0 14px #FFD700) drop-shadow(0 0 28px #FF8C00); }
   }
   @keyframes lightRay {
     0%,100% { opacity: 0.1; }
     50%      { opacity: 0.35; }
   }
   @keyframes omFloat {
-    0%,100% { transform: translateY(0) scale(1); opacity: 0.18; }
-    50%      { transform: translateY(-18px) scale(1.06); opacity: 0.35; }
+    0%,100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-18px) scale(1.06); }
   }
   @keyframes swingBell {
     0%      { transform: rotate(0deg); }
@@ -30,27 +30,27 @@ const GLOBAL_CSS = `
     100%    { transform: rotate(0deg); }
   }
   @keyframes floatDown {
-    0%   { transform: translateY(-5vh) rotate(0deg) translateX(0);   opacity: 0.9; }
-    25%  { transform: translateY(25vh) rotate(90deg)  translateX(30px); }
-    50%  { transform: translateY(55vh) rotate(180deg) translateX(-25px); }
-    75%  { transform: translateY(80vh) rotate(270deg) translateX(18px); }
-    100% { transform: translateY(110vh) rotate(360deg) translateX(0); opacity: 0.15; }
+    0%   { transform: translate3d(0, -5vh, 0) rotate(0deg); }
+    25%  { transform: translate3d(30px, 25vh, 0) rotate(90deg); }
+    50%  { transform: translate3d(-25px, 55vh, 0) rotate(180deg); }
+    75%  { transform: translate3d(18px, 80vh, 0) rotate(270deg); }
+    100% { transform: translate3d(0, 110vh, 0) rotate(360deg); }
   }
   @keyframes divaFlicker {
-    0%,100% { opacity: 1; transform: scaleY(1) scaleX(1); }
-    30%     { opacity: 0.85; transform: scaleY(1.15) scaleX(0.9); }
-    60%     { opacity: 0.95; transform: scaleY(0.9) scaleX(1.1); }
+    0%,100% { transform: scaleY(1) scaleX(1); }
+    30%     { transform: scaleY(1.15) scaleX(0.9); }
+    60%     { transform: scaleY(0.9) scaleX(1.1); }
   }
   @keyframes firefly {
-    0%,100% { opacity: 0; transform: translate(0, 0) scale(0.8); }
-    50%     { opacity: 0.8; transform: translate(20px, -30px) scale(1.2); }
+    0%,100% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
+    50%     { transform: translate3d(20px, -30px, 0) scale(1.2); opacity: 0.8; }
   }
   @keyframes shimmerText {
     0%   { background-position: -200% center; }
     100% { background-position:  200% center; }
   }
-  .golden-glow    { animation: goldenGlow    3s ease-in-out infinite; }
-  .bell-ring      { animation: swingBell     0.7s ease-in-out 3; transform-origin: top center; }
+  .golden-glow    { animation: goldenGlow 3s ease-in-out infinite; will-change: filter; }
+  .bell-ring      { animation: swingBell 0.7s ease-in-out 3; transform-origin: top center; }
   .deva-font      { font-family: 'Noto Serif Devanagari', serif; }
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -177,46 +177,49 @@ function RukminiSilhouette({ className }: { className?: string }) {
 
 // ─── FLOATING PETALS ─────────────────────────────────────────────────────────
 function FloatingPetals({ dark }: { dark: boolean }) {
-  const petals = useMemo(() => Array.from({ length: 20 }, (_, i) => {
-    const lightColors = ["#FF8C00", "#FFD700", "#FF6B35", "#FFA500", "#FFEC8B", "#FF4500", "#FFC107"];
-    const darkColors  = ["#9B59B6", "#7B2FBE", "#C39BD3", "#6C3483", "#8E44AD", "#D7BDE2"];
+  const petals = useMemo(() => Array.from({ length: 10 }, (_, i) => {
+    const lightColors = ["#FF8C00", "#FFD700", "#FF6B35", "#FFA500", "#FFEC8B"];
+    const darkColors  = ["#9B59B6", "#7B2FBE", "#C39BD3", "#6C3483", "#8E44AD"];
     return {
       id: i,
-      size:     12 + (i * 7 % 20),
-      left:     (i * 13 + 7)  % 100,
-      delay:    (i * 1.7)     % 10,
-      duration: 9 + (i * 1.3) % 10,
+      size:     14 + (i * 7 % 18),
+      left:     (i * 19 + 5) % 95,
+      delay:    (i * 2.1) % 10,
+      duration: 10 + (i * 1.5) % 8,
       color:    (dark ? darkColors : lightColors)[i % (dark ? darkColors : lightColors).length]
     };
   }), [dark]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden">
+    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden" style={{ willChange: "auto", contain: "strict" }}>
       {petals.map(p => (
         <div
           key={p.id}
-          className="absolute opacity-70"
           style={{
+            position:        "absolute",
             width:           p.size,
             height:          p.size * 0.6,
             left:            `${p.left}%`,
             top:             "-8%",
             backgroundColor: p.color,
+            opacity:         0.6,
             borderRadius:    "50% 50% 50% 50% / 60% 60% 40% 40%",
             animation:       `floatDown ${p.duration}s ${p.delay}s linear infinite`,
-            filter:          "blur(0.4px)"
+            willChange:      "transform",
+            backfaceVisibility: "hidden"
           }}
         />
       ))}
       {/* Floating Om symbols */}
-      {[10, 35, 60, 82].map((left, i) => (
+      {[15, 50, 80].map((left, i) => (
         <div
           key={`om-${i}`}
           className="absolute text-yellow-500/20 text-4xl select-none"
           style={{
             left:      `${left}%`,
-            top:       `${20 + i * 18}%`,
-            animation: `omFloat ${4 + i}s ${i * 0.8}s ease-in-out infinite`
+            top:       `${25 + i * 25}%`,
+            animation: `omFloat ${5 + i}s ${i * 1.2}s ease-in-out infinite`,
+            willChange: "transform"
           }}
         >
           ॐ
@@ -335,20 +338,28 @@ function LoadingScreen({ onDone }: { onDone: () => void }) {
 
 // ─── SCROLL PROGRESS ──────────────────────────────────────────────────────────
 function ScrollProgress() {
-  const [pct, setPct] = useState(0);
+  const barRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    let ticking = false;
     const update = () => {
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setPct(total > 0 ? (window.scrollY / total) * 100 : 0);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = total > 0 ? (window.scrollY / total) * 100 : 0;
+        if (barRef.current) barRef.current.style.width = `${pct}%`;
+        ticking = false;
+      });
     };
     window.addEventListener("scroll", update, { passive: true });
     return () => window.removeEventListener("scroll", update);
   }, []);
   return (
-    <div className="fixed top-0 left-0 right-0 h-[3px] z-50">
+    <div className="fixed top-0 left-0 right-0 h-[3px] z-50" style={{ contain: "layout style" }}>
       <div
-        className="h-full transition-all duration-100"
-        style={{ width: `${pct}%`, background: "linear-gradient(90deg, #FF6B35, #FFD700, #FF8C00)" }}
+        ref={barRef}
+        className="h-full"
+        style={{ width: "0%", background: "linear-gradient(90deg, #FF6B35, #FFD700, #FF8C00)", willChange: "width", transition: "width 80ms linear" }}
       />
     </div>
   );
@@ -358,7 +369,15 @@ function ScrollProgress() {
 function Navbar({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
-    const h = () => setScrolled(window.scrollY > 60);
+    let ticking = false;
+    const h = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 60);
+        ticking = false;
+      });
+    };
     window.addEventListener("scroll", h, { passive: true });
     return () => window.removeEventListener("scroll", h);
   }, []);
@@ -394,13 +413,109 @@ function Navbar({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
   );
 }
 
+// ─── BELL SOUND GENERATOR (Traditional Temple Ghanta) ─────────────────────────
+function playBellSound() {
+  try {
+    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const now = ctx.currentTime;
+    const duration = 4.0;
+
+    // Master compressor to prevent clipping
+    const compressor = ctx.createDynamicsCompressor();
+    compressor.threshold.setValueAtTime(-12, now);
+    compressor.knee.setValueAtTime(10, now);
+    compressor.ratio.setValueAtTime(4, now);
+    compressor.connect(ctx.destination);
+
+    // Convolver for metallic reverb-like effect
+    const convGain = ctx.createGain();
+    convGain.gain.setValueAtTime(0.15, now);
+    convGain.connect(compressor);
+
+    // Temple bell has inharmonic partials — these frequencies create the
+    // characteristic metallic "ghaaan" sound of a brass ghanta
+    const partials = [
+      { freq: 280,  gain: 0.30, decay: 3.5, type: "sine" as OscillatorType },    // Deep fundamental
+      { freq: 283,  gain: 0.25, decay: 3.3, type: "sine" as OscillatorType },    // Slight detune for beating
+      { freq: 560,  gain: 0.22, decay: 2.8, type: "sine" as OscillatorType },    // 2nd partial
+      { freq: 563,  gain: 0.18, decay: 2.6, type: "sine" as OscillatorType },    // Beating pair
+      { freq: 845,  gain: 0.14, decay: 2.2, type: "sine" as OscillatorType },    // 3rd partial (inharmonic)
+      { freq: 1135, gain: 0.10, decay: 1.8, type: "sine" as OscillatorType },    // 4th partial
+      { freq: 1428, gain: 0.07, decay: 1.4, type: "sine" as OscillatorType },    // 5th partial
+      { freq: 1730, gain: 0.04, decay: 1.0, type: "sine" as OscillatorType },    // 6th (shimmer)
+      { freq: 2200, gain: 0.03, decay: 0.7, type: "sine" as OscillatorType },    // High shimmer
+    ];
+
+    partials.forEach(p => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = p.type;
+      osc.frequency.setValueAtTime(p.freq, now);
+      // Slight pitch bend down on strike
+      osc.frequency.setValueAtTime(p.freq * 1.008, now);
+      osc.frequency.exponentialRampToValueAtTime(p.freq, now + 0.06);
+      gain.gain.setValueAtTime(p.gain, now);
+      // Sharp attack then long exponential decay (resonant bell)
+      gain.gain.setTargetAtTime(p.gain * 0.7, now + 0.003, 0.01);
+      gain.gain.setTargetAtTime(0.0001, now + 0.08, p.decay * 0.45);
+      osc.connect(gain);
+      gain.connect(compressor);
+      // Also send to reverb
+      const revSend = ctx.createGain();
+      revSend.gain.setValueAtTime(0.08, now);
+      osc.connect(revSend);
+      revSend.connect(convGain);
+      osc.start(now);
+      osc.stop(now + duration);
+    });
+
+    // Strike impact — the metallic "thak" when the clapper hits
+    const noiseLength = ctx.sampleRate * 0.04;
+    const noiseBuffer = ctx.createBuffer(1, noiseLength, ctx.sampleRate);
+    const noiseData = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < noiseLength; i++) {
+      noiseData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / noiseLength, 3);
+    }
+    const noiseNode = ctx.createBufferSource();
+    noiseNode.buffer = noiseBuffer;
+    // Band-pass filter to shape the strike
+    const strikeFilter = ctx.createBiquadFilter();
+    strikeFilter.type = "bandpass";
+    strikeFilter.frequency.setValueAtTime(1800, now);
+    strikeFilter.Q.setValueAtTime(2, now);
+    const strikeGain = ctx.createGain();
+    strikeGain.gain.setValueAtTime(0.35, now);
+    strikeGain.gain.exponentialRampToValueAtTime(0.001, now + 0.06);
+    noiseNode.connect(strikeFilter);
+    strikeFilter.connect(strikeGain);
+    strikeGain.connect(compressor);
+    noiseNode.start(now);
+
+    // Cleanup
+    setTimeout(() => ctx.close(), (duration + 0.5) * 1000);
+  } catch {
+    // Web Audio not supported, silent fallback
+  }
+}
+
 // ─── HERO SECTION ─────────────────────────────────────────────────────────────
 function HeroSection() {
   const [bellRinging, setBellRinging] = useState(false);
+  const bellRef = useRef<SVGSVGElement>(null);
 
   const ringBell = () => {
     if (bellRinging) return;
     setBellRinging(true);
+    playBellSound();
+
+    // Restart CSS animation by removing class, forcing reflow, then re-adding
+    const svg = bellRef.current;
+    if (svg) {
+      svg.classList.remove("bell-ring");
+      void svg.offsetWidth; // force reflow
+      svg.classList.add("bell-ring");
+    }
+
     setTimeout(() => setBellRinging(false), 2200);
   };
 
@@ -435,11 +550,22 @@ function HeroSection() {
 
       {/* Temple bell */}
       <div className="absolute top-20 right-10 md:right-20 z-20">
-        <button onClick={ringBell} className="group flex flex-col items-center gap-1">
+        <button
+          onClick={ringBell}
+          className="group flex flex-col items-center gap-1"
+          style={{ cursor: "pointer" }}
+        >
           <svg
+            ref={bellRef}
             width="38" height="52" viewBox="0 0 40 56" fill="#FFD700"
-            className={`drop-shadow-lg transition-all ${bellRinging ? "bell-ring" : ""}`}
-            style={{ filter: "drop-shadow(0 0 12px rgba(255,215,0,0.6))", transformOrigin: "top center" }}
+            className="drop-shadow-lg"
+            style={{
+              filter: bellRinging
+                ? "drop-shadow(0 0 20px rgba(255,215,0,0.9))"
+                : "drop-shadow(0 0 12px rgba(255,215,0,0.6))",
+              transformOrigin: "top center",
+              transition: "filter 0.3s ease"
+            }}
           >
             <rect x="17" y="0" width="6" height="9" rx="2"/>
             <path d="M4 40 Q4 14 20 14 Q36 14 36 40 Z"/>
@@ -580,9 +706,9 @@ function WishesFrom() {
           className="deva-font golden-glow font-bold text-3xl mb-1"
           style={{ color: "#FFD700" }}
         >
-          तुमचे नाव
+          श्री जनार्दन शेळके
         </h2>
-        <p className="deva-font text-yellow-200/55 text-sm">व तुमचे संपूर्ण कुटुंब</p>
+        <p className="deva-font text-yellow-200/55 text-sm">व परिवार</p>
 
         <div className="flex items-center gap-3 my-5">
           <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,215,0,0.4))" }}/>
@@ -591,7 +717,7 @@ function WishesFrom() {
         </div>
 
         <p className="deva-font text-yellow-200/65 text-sm leading-relaxed">
-          आपल्या सर्वांना आषाढी एकादशीच्या हार्दिक शुभेच्छा!
+          यांजकडून आपणास व आपल्या परिवारास आषाढी एकादशीच्या मनःपूर्वक शुभेच्छा!
         </p>
 
         <div className="mt-5 flex justify-center gap-3">
@@ -769,6 +895,8 @@ function Gallery() {
             <img
               src={`https://images.unsplash.com/photo-${img.id}?w=400&h=400&fit=crop&auto=format`}
               alt={img.label}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/72 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
@@ -1094,19 +1222,20 @@ function VisitorCounter() {
 // ─── DARK MODE FIREFLIES ──────────────────────────────────────────────────────
 function Fireflies() {
   return (
-    <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
-      {Array.from({ length: 12 }).map((_, i) => (
+    <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden" style={{ contain: "strict" }}>
+      {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
           className="absolute rounded-full"
           style={{
             width:           4 + (i % 3) * 2,
             height:          4 + (i % 3) * 2,
-            left:            `${(i * 17 + 5) % 95}%`,
-            top:             `${(i * 23 + 10) % 90}%`,
-            background:      "#C39BD3",
-            boxShadow:       "0 0 8px 4px rgba(195,155,211,0.5)",
-            animation:       `firefly ${4 + (i % 5)}s ${(i % 6) * 0.7}s ease-in-out infinite`
+            left:            `${(i * 21 + 5) % 95}%`,
+            top:             `${(i * 27 + 10) % 90}%`,
+            background:      "radial-gradient(circle, #C39BD3 30%, rgba(195,155,211,0.3) 100%)",
+            animation:       `firefly ${4 + (i % 5)}s ${(i % 6) * 0.7}s ease-in-out infinite`,
+            willChange:      "transform, opacity",
+            backfaceVisibility: "hidden"
           }}
         />
       ))}
