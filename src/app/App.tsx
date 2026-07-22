@@ -31,9 +31,9 @@ const GLOBAL_CSS = `
   }
   @keyframes floatDown {
     0%   { transform: translate3d(0, -5vh, 0) rotate(0deg); }
-    25%  { transform: translate3d(30px, 25vh, 0) rotate(90deg); }
-    50%  { transform: translate3d(-25px, 55vh, 0) rotate(180deg); }
-    75%  { transform: translate3d(18px, 80vh, 0) rotate(270deg); }
+    25%  { transform: translate3d(2vw, 25vh, 0) rotate(90deg); }
+    50%  { transform: translate3d(-2vw, 55vh, 0) rotate(180deg); }
+    75%  { transform: translate3d(1.5vw, 80vh, 0) rotate(270deg); }
     100% { transform: translate3d(0, 110vh, 0) rotate(360deg); }
   }
   @keyframes divaFlicker {
@@ -43,13 +43,29 @@ const GLOBAL_CSS = `
   }
   @keyframes firefly {
     0%,100% { transform: translate3d(0, 0, 0) scale(0.8); opacity: 0; }
-    50%     { transform: translate3d(20px, -30px, 0) scale(1.2); opacity: 0.8; }
+    50%     { transform: translate3d(10px, -15px, 0) scale(1.2); opacity: 0.8; }
   }
   @keyframes shimmerText {
     0%   { background-position: -200% center; }
     100% { background-position:  200% center; }
   }
-  html, body { overflow-x: hidden; width: 100%; }
+  html {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative !important;
+  }
+  #root {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    position: relative !important;
+  }
   .golden-glow    { animation: goldenGlow 3s ease-in-out infinite; will-change: filter; }
   .bell-ring      { animation: swingBell 0.7s ease-in-out 3; transform-origin: top center; }
   .deva-font      { font-family: 'Noto Serif Devanagari', serif; }
@@ -1302,7 +1318,7 @@ export default function App() {
       </AnimatePresence>
 
       {!loading && (
-        <div className="min-h-screen bg-background relative" style={{ overflowX: "hidden", maxWidth: "100vw" }}>
+        <div className="min-h-screen bg-background" style={{ overflowX: "clip", position: "relative", width: "100%", maxWidth: "100vw" }}>
           <ScrollProgress/>
           <FloatingPetals dark={dark}/>
           {dark && <Fireflies/>}
