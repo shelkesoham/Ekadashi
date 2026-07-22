@@ -49,6 +49,7 @@ const GLOBAL_CSS = `
     0%   { background-position: -200% center; }
     100% { background-position:  200% center; }
   }
+  html, body { overflow-x: hidden; width: 100%; }
   .golden-glow    { animation: goldenGlow 3s ease-in-out infinite; will-change: filter; }
   .bell-ring      { animation: swingBell 0.7s ease-in-out 3; transform-origin: top center; }
   .deva-font      { font-family: 'Noto Serif Devanagari', serif; }
@@ -191,7 +192,7 @@ function FloatingPetals({ dark }: { dark: boolean }) {
   }), [dark]);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden" style={{ willChange: "auto", contain: "strict" }}>
+    <div className="fixed inset-0 pointer-events-none z-10 overflow-hidden" style={{ willChange: "auto", contain: "strict", maxWidth: "100vw" }}>
       {petals.map(p => (
         <div
           key={p.id}
@@ -384,7 +385,7 @@ function Navbar({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
 
   return (
     <nav
-      className="fixed top-[3px] left-0 right-0 z-40 flex items-center justify-between px-6 md:px-14 py-3 transition-all duration-500"
+      className="fixed top-[3px] left-0 right-0 z-40 flex items-center justify-between px-4 sm:px-6 md:px-14 py-2 sm:py-3 transition-all duration-500"
       style={{
         background:    scrolled ? "rgba(13,4,0,0.88)" : "transparent",
         backdropFilter: scrolled ? "blur(20px)" : "none",
@@ -520,7 +521,7 @@ function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden" style={{ maxWidth: "100vw" }}>
       {/* BG image */}
       <div className="absolute inset-0">
         <img
@@ -537,7 +538,7 @@ function HeroSection() {
       {[-60, -30, 0, 30, 60].map((angle, i) => (
         <div
           key={i}
-          className="absolute top-0 left-1/2 pointer-events-none"
+          className="absolute top-0 left-1/2 pointer-events-none hidden sm:block"
           style={{
             width: "2px", height: "55vh",
             background: "linear-gradient(180deg, rgba(255,215,0,0.4) 0%, transparent 100%)",
@@ -549,7 +550,7 @@ function HeroSection() {
       ))}
 
       {/* Temple bell */}
-      <div className="absolute top-20 right-10 md:right-20 z-20">
+      <div className="absolute top-16 right-4 sm:top-20 sm:right-10 md:right-20 z-20">
         <button
           onClick={ringBell}
           className="group flex flex-col items-center gap-1"
@@ -557,8 +558,8 @@ function HeroSection() {
         >
           <svg
             ref={bellRef}
-            width="38" height="52" viewBox="0 0 40 56" fill="#FFD700"
-            className="drop-shadow-lg"
+            width="28" height="38" viewBox="0 0 40 56" fill="#FFD700"
+            className="drop-shadow-lg sm:!w-[38px] sm:!h-[52px]"
             style={{
               filter: bellRinging
                 ? "drop-shadow(0 0 20px rgba(255,215,0,0.9))"
@@ -572,7 +573,7 @@ function HeroSection() {
             <ellipse cx="20" cy="40" rx="16" ry="5"/>
             <ellipse cx="20" cy="49" rx="5" ry="6"/>
           </svg>
-          <span className="deva-font text-yellow-400/50 text-xs group-hover:text-yellow-300 transition-colors">
+          <span className="deva-font text-yellow-400/50 text-[10px] sm:text-xs group-hover:text-yellow-300 transition-colors">
             घंटा वाजवा
           </span>
         </button>
@@ -580,20 +581,20 @@ function HeroSection() {
 
 
       {/* Hero text */}
-      <div className="relative z-20 text-center px-6 max-w-4xl mx-auto pb-52 md:pb-64">
+      <div className="relative z-20 text-center px-4 sm:px-6 max-w-4xl mx-auto pb-20 sm:pb-52 md:pb-64">
         <motion.div
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, ease: "backOut" }}
-          className="text-5xl md:text-7xl mb-5"
+          className="text-4xl sm:text-5xl md:text-7xl mb-3 sm:mb-5"
         >🙏</motion.div>
 
         <motion.h1
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0,  opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.8 }}
-          className="deva-font golden-glow font-bold leading-tight mb-6"
-          style={{ color: "#FFD700", fontSize: "clamp(2rem, 6vw, 4.5rem)" }}
+          className="deva-font golden-glow font-bold leading-tight mb-4 sm:mb-6"
+          style={{ color: "#FFD700", fontSize: "clamp(1.5rem, 5.5vw, 4.5rem)" }}
         >
           आषाढी एकादशीच्या<br/>
           <span style={{ fontSize: "0.82em" }}>हार्दिक शुभेच्छा!</span>
@@ -603,7 +604,7 @@ function HeroSection() {
           initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0,  opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="deva-font text-lg md:text-xl leading-loose"
+          className="deva-font text-base sm:text-lg md:text-xl leading-relaxed sm:leading-loose"
           style={{ color: "#FFF8DC" }}
         >
           <p>विठ्ठल नामाचा गजर,</p>
@@ -620,15 +621,16 @@ function HeroSection() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.1, duration: 0.8 }}
-          className="mt-8 overflow-hidden py-3"
-          style={{ borderTop: "1px solid rgba(255,215,0,0.3)", borderBottom: "1px solid rgba(255,215,0,0.3)" }}
+          className="mt-5 sm:mt-8 overflow-hidden py-2 sm:py-3"
+          style={{ borderTop: "1px solid rgba(255,215,0,0.3)", borderBottom: "1px solid rgba(255,215,0,0.3)", maxWidth: "100%" }}
         >
           <motion.p
-            animate={{ x: [0, -1100] }}
+            animate={{ x: ["0%", "-50%"] }}
             transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
-            className="whitespace-nowrap deva-font text-yellow-300 text-lg tracking-widest"
+            className="whitespace-nowrap deva-font text-yellow-300 text-sm sm:text-lg tracking-widest"
+            style={{ width: "fit-content" }}
           >
-            🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨ जय हरी विठ्ठल! 🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨
+            🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨ जय हरी विठ्ठल! 🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨ 🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨ जय हरी विठ्ठल! 🔔 जय हरी विठ्ठल! 🙏 जय जय विठ्ठल! 🌸 पांडुरंग हरी! ✨
           </motion.p>
         </motion.div>
       </div>
@@ -664,7 +666,7 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 // ─── WISHES FROM ──────────────────────────────────────────────────────────────
 function WishesFrom() {
   return (
-    <section className="py-20 px-6 flex justify-center">
+    <section className="py-12 sm:py-20 px-4 sm:px-6 flex justify-center">
       <motion.div
         initial={{ y: 40, opacity: 0, scale: 0.95 }}
         whileInView={{ y: 0, opacity: 1, scale: 1 }}
@@ -738,7 +740,7 @@ function WishesFrom() {
 // ─── MESSAGE CARD ─────────────────────────────────────────────────────────────
 function MessageCard() {
   return (
-    <section className="py-10 px-6">
+    <section className="py-8 sm:py-10 px-4 sm:px-6">
       <motion.div
         initial={{ y: 40, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -792,7 +794,7 @@ function DailyThought() {
   }, []);
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-10 sm:py-16 px-4 sm:px-6">
       <div className="max-w-3xl mx-auto">
         <SectionTitle>✨ दैनिक विचार ✨</SectionTitle>
         <div
@@ -809,7 +811,7 @@ function DailyThought() {
               animate={{ opacity: 1, y: 0  }}
               exit={{ opacity: 0, y: -18 }}
               transition={{ duration: 0.5 }}
-              className="deva-font text-xl md:text-2xl italic px-10 py-10 text-center"
+              className="deva-font text-lg sm:text-xl md:text-2xl italic px-4 sm:px-10 py-6 sm:py-10 text-center"
               style={{ color: "#FFF8DC" }}
             >
               <span className="text-yellow-500 text-4xl leading-none mr-1">"</span>
@@ -839,7 +841,7 @@ function DailyThought() {
 // ─── SANT VACHAN ──────────────────────────────────────────────────────────────
 function SantVachan() {
   return (
-    <section className="py-16 px-6">
+    <section className="py-10 sm:py-16 px-4 sm:px-6">
       <SectionTitle>📖 संत वचन 📖</SectionTitle>
       <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5">
         {SANT_VACHAN.map((s, i) => (
@@ -877,7 +879,7 @@ function Gallery() {
   const [active, setActive] = useState<number | null>(null);
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-10 sm:py-16 px-4 sm:px-6">
       <SectionTitle>🌸 भक्ती दर्शन 🌸</SectionTitle>
       <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
         {GALLERY.map((img, i) => (
@@ -946,7 +948,7 @@ function Gallery() {
 // ─── ABHANG SECTION ───────────────────────────────────────────────────────────
 function AbhangSection() {
   return (
-    <section className="py-16 px-6 overflow-hidden">
+    <section className="py-10 sm:py-16 px-4 sm:px-6 overflow-hidden">
       <SectionTitle>🎶 अभंग 🎶</SectionTitle>
       {[false, true].map((reverse, row) => (
         <div key={row} className={`relative ${row ? "mt-4" : ""}`}>
@@ -984,7 +986,7 @@ function AbhangSection() {
 // ─── BLESSINGS ────────────────────────────────────────────────────────────────
 function BlessingsSection() {
   return (
-    <section className="py-20 px-6">
+    <section className="py-12 sm:py-20 px-4 sm:px-6">
       <SectionTitle>🙏 आशीर्वाद 🙏</SectionTitle>
       <p className="deva-font text-center text-yellow-200/60 mb-10 text-lg -mt-5">
         भगवान विठ्ठल आपल्या आयुष्यात...
@@ -1034,7 +1036,7 @@ function ShareWish() {
   };
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-10 sm:py-16 px-4 sm:px-6">
       <SectionTitle>💬 आपल्या शुभेच्छा लिहा</SectionTitle>
       <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
         <motion.form
@@ -1156,7 +1158,7 @@ function ShareSection() {
   ];
 
   return (
-    <section className="py-16 px-6">
+    <section className="py-10 sm:py-16 px-4 sm:px-6">
       <SectionTitle>📱 शुभेच्छा शेअर करा</SectionTitle>
       <p className="deva-font text-center text-yellow-200/55 mb-8 -mt-5">
         आपल्या प्रियजनांना आषाढी एकादशीच्या शुभेच्छा द्या
@@ -1300,7 +1302,7 @@ export default function App() {
       </AnimatePresence>
 
       {!loading && (
-        <div className="min-h-screen bg-background relative">
+        <div className="min-h-screen bg-background relative" style={{ overflowX: "hidden", maxWidth: "100vw" }}>
           <ScrollProgress/>
           <FloatingPetals dark={dark}/>
           {dark && <Fireflies/>}
